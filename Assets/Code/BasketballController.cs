@@ -5,6 +5,8 @@ using UnityEngine;
 public class BasketballController : MonoBehaviour {
 
     public float MoveSpeed = 10;
+
+    // transform is the component of GameObject that responsible for position, rotation and scale of that GameObject.
     public Transform Ball;
     public Transform PosDribble;
     public Transform PosOverHead;
@@ -15,11 +17,14 @@ public class BasketballController : MonoBehaviour {
     private bool IsBallInHands = true;
     private bool IsBallFlying = false;
     private float T = 0;
+    private float score = 0;
 
     // Update is called once per frame
     void Update() {
 
         // walking
+
+        //https://docs.unity3d.com/ScriptReference/CharacterController.Move.html
         Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         transform.position += direction * MoveSpeed * Time.deltaTime;
         transform.LookAt(transform.position + direction);
@@ -41,6 +46,7 @@ public class BasketballController : MonoBehaviour {
                 Ball.position = PosDribble.position + Vector3.up * Mathf.Abs(Mathf.Sin(Time.time * 5));
                 Arms.localEulerAngles = Vector3.right * 0;
             }
+
 
             // throw ball
             if (Input.GetKeyUp(KeyCode.Space)) {
@@ -76,10 +82,14 @@ public class BasketballController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other) {
 
+        score += 1;
+        print("Score is " + score);
+
         if (!IsBallInHands && !IsBallFlying) {
 
             IsBallInHands = true;
             Ball.GetComponent<Rigidbody>().isKinematic = true;
+           
         }
     }
 }
